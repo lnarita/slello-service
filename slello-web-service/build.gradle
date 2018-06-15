@@ -1,0 +1,93 @@
+buildscript {
+    ext {
+        groovy_version = "2.4.15"
+        spring_boot_version = "2.0.1.RELEASE"
+        swagger_version = "2.4.0"
+    }
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${spring_boot_version}"
+    }
+}
+
+apply plugin: "kotlin-spring"
+
+apply plugin: "org.springframework.boot"
+apply plugin: "io.spring.dependency-management"
+
+
+jar {
+    baseName = "slello-web-service"
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+    maven { url "https://repo.spring.io/libs-milestone" }
+    maven { url "https://dl.bintray.com/konrad-kaminski/maven" }
+}
+
+kotlin.experimental {
+    coroutines "enable"
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:Finchley.RC1"
+    }
+}
+
+dependencies {
+    ["kotlinx-coroutines-core", "kotlinx-coroutines-jdk8"].each {
+        compile "org.jetbrains.kotlinx:${it}:0.22.5"
+    }
+    runtime "org.codehaus.groovy:groovy:${groovy_version}"
+
+    // Spring
+    ["spring-cloud-starter", "spring-cloud-starter-netflix-hystrix"].each {
+        compile "org.springframework.cloud:${it}"
+    }
+    ["spring-boot-starter-web",
+     "spring-boot-starter-jetty",
+     "spring-boot-starter-jersey",
+     "spring-boot-starter-security",
+     "spring-boot-starter-webflux",
+     "spring-boot-starter-actuator"].each {
+        compile "org.springframework.boot:${it}"
+    }
+    compile "org.springframework.kotlin:spring-kotlin-coroutine:0.3.4"
+    compile "org.springframework.data:spring-data-mongodb"
+    runtime "org.springframework.boot:spring-boot-devtools"
+    testCompile "org.springframework.boot:spring-boot-starter-test"
+
+    ["mongodb-driver",
+     "mongodb-driver-async",
+     "mongodb-driver-reactivestreams"].each {
+        compile "org.mongodb:${it}"
+    }
+
+    compile "io.jsonwebtoken:jjwt:0.9.0"
+
+    // Swagger
+    ["springfox-swagger2", "springfox-swagger-ui"].each {
+        compile "io.springfox:${it}:${swagger_version}"
+    }
+
+    // Λrrow
+    ["arrow-core",
+     "arrow-syntax",
+     "arrow-typeclasses",
+     "arrow-data",
+     "arrow-instances-core",
+     "arrow-instances-data",
+     "arrow-annotations-processor"].each {
+        compile "io.arrow-kt:${it}:0.7.1"
+    }
+
+    compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.0"
+    compile "org.jolokia:jolokia-core:1.5.0"
+    compile "io.micrometer:micrometer-registry-prometheus:1.0.3"
+}

@@ -1,0 +1,3 @@
+['slello-models', 'slello-web-service'].forEach {
+    include "${it}"
+}

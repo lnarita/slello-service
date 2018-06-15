@@ -1,0 +1,28 @@
+version: '3'
+services:
+  redis:
+    image: "redis:3.2.11-alpine"
+    ports:
+      - "6380:6379"
+
+#  postgres:
+#    image: "postgres:9.3-alpine"
+#    volumes:
+#      - ./scripts/postgre:/docker-entrypoint-initdb.d/
+#    environment:
+#      POSTGRES_PASSWORD: ollels
+#      POSTGRES_USER: slello
+#    ports:
+#      - "5431:5432"
+
+  mongo:
+    image: "mongo:3.6"
+    volumes:
+      - ./scripts/mongo:/docker-entrypoint-initdb.d/
+#    environment:
+#      MONGO_INITDB_DATABASE: slello
+#      MONGO_INITDB_ROOT_USERNAME: slello
+#      MONGO_INITDB_ROOT_PASSWORD: ollels
+    ports:
+      - 27017:27017
+

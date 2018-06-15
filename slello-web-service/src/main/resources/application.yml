@@ -1,0 +1,29 @@
+server:
+    port: 13182
+
+server.jetty:
+    acceptors: 4
+    selectors: -1
+    acceptCount: 1000
+
+spring.data.mongodb:
+    database: slello
+    host: localhost
+    port: 27017
+    username: slello
+    password: ollels
+
+jwt:
+    secret: ZGx3ak93dVVnYlVkbHVvV1dNdjJDZnpDd0tLQldhZXpCQXZvMVdHQllNTmFkZWQ4RXBoMXVOM051QjNuS3FuamZ1UmhTWDdCdlBMSERtcnNSckl3NHVRRm1seGR1a2wxM0dMbXEyQ3ZldHdnaXRCaEIyQVAyeWhDajhXcjdMQ05jQXdEVlI2STA5VUt0bXBGQ0FOcUpRRjNMVmFSSDJvUk5BZU5LQWxVcktjYUtYR2ozaTlnNEdyTHBaYkZKR296Y1RraFFoSzQ=
+    expiration:
+        duration: 1
+        timeunit: DAYS
+
+http.timeout:
+    read: 1500
+    connect: 1500
+
+management.endpoints.web.exposure.include: prometheus, jolokia, metrics, health, httptrace, hystrix.stream
+management.metrics.export.prometheus.enabled: true
+
+management.endpoint.health.show-details: "ALWAYS"
