@@ -5,10 +5,8 @@ import org.slello.model.Visibility
 
 data class CreateUserRequest(val username: String, val email: String, val password: String, val role: Authority)
 data class RegisterRequest(val username: String, val email: String, val password: String)
-data class UpdateUserRequest(val email: String, val password: String, val role: Authority)
-data class PatchUserRequest(val email: String?, val password: String?, val role: Authority?)
 
-data class CreateCommunityRequest(val name: String, val path: String, val description: String, val visibility: Visibility)
+data class CreateCommunityRequest(val name: String, val path: String, val thumbnail: String, val description: String, val visibility: Visibility)
 
 data class CreateTopicRequest(val communityId: String, val headline: String, val description: String?)
 
