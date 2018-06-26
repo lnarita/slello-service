@@ -6,14 +6,14 @@ import org.slello.model.Comment
 import org.slello.model.User
 import org.slello.repository.CommentRepository
 import org.slello.security.model.ApplicationUserDetails
-import org.slello.v1.rest.model.request.CommentTopicRequest
 import org.slello.v1.rest.model.request.CreateCommentRequest
-import org.slello.v1.rest.model.response.*
+import org.slello.v1.rest.model.response.CommentResponse
+import org.slello.v1.rest.model.response.Response
+import org.slello.v1.rest.model.response.ResponseMetaData
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
-import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import java.time.LocalDateTime
 
@@ -23,10 +23,11 @@ import java.time.LocalDateTime
 class CommentResource @Autowired constructor(val commentRepository: CommentRepository) {
 
     @GetMapping
-    fun fetchAll(): Flux<Response<CommentResponse>> = commentRepository.findAll()
+    fun fetchAll(): Mono<Response<MutableList<CommentResponse>>> = commentRepository.findAll()
             .map { comment ->
                 toCommentResponse(comment)
-            }.map {
+            }.collectList()
+            .map {
                 val metadata = ResponseMetaData(HttpStatus.OK.value())
                 Response(metadata, data = it)
             }.defaultIfEmpty(Response(ResponseMetaData(HttpStatus.NO_CONTENT.value()), errors = null, data = null))
@@ -49,10 +50,7 @@ class CommentResource @Autowired constructor(val commentRepository: CommentRepos
 
     @DeleteMapping("/{id}")
     fun deleteComment(@PathVariable("id") id: String): Mono<Response<String>>? = commentRepository.deleteById(ObjectId(id))
-            .map {
-                val metadata = ResponseMetaData(HttpStatus.OK.value())
-                Response(metadata, data = "OK")
-            }.defaultIfEmpty(Response(ResponseMetaData(HttpStatus.NOT_FOUND.value()), errors = null, data = null))
+            .then(Mono.just(Response(ResponseMetaData(HttpStatus.OK.value()), data = "OK")))
 
     @PostMapping
     fun createComment(principal: Authentication, @RequestBody createCommentRequest: CreateCommentRequest): Mono<Response<CommentResponse>>? = Mono.fromFuture(

@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.*
-import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 
@@ -20,11 +19,12 @@ import reactor.core.publisher.Mono
 class AccountResource @Autowired constructor(val accountRepository: AccountRepository, val passwordEncoder: PasswordEncoder) {
 
     @GetMapping
-    fun fetchAll(): Flux<Response<UserResponse>> =
+    fun fetchAll(): Mono<Response<MutableList<UserResponse>>> =
             accountRepository.findAll()
                     .map { user ->
                         toUserResponse(user)
-                    }.map {
+                    }.collectList()
+                    .map {
                         val metadata = ResponseMetaData(HttpStatus.OK.value())
                         Response(metadata, data = it)
                     }.defaultIfEmpty(Response(ResponseMetaData(HttpStatus.NO_CONTENT.value()), errors = null, data = null))
@@ -40,10 +40,7 @@ class AccountResource @Autowired constructor(val accountRepository: AccountRepos
 
     @DeleteMapping("/{username}")
     fun deleteUser(@PathVariable("username") username: String): Mono<Response<String>> = accountRepository.deleteById(username)
-            .map {
-                val metadata = ResponseMetaData(HttpStatus.OK.value())
-                Response(metadata, data = "OK")
-            }.defaultIfEmpty(Response(ResponseMetaData(HttpStatus.NOT_FOUND.value()), errors = null, data = null))
+            .then(Mono.just(Response(ResponseMetaData(HttpStatus.OK.value()), data = "OK")))
 
     @PostMapping
     fun createUser(@RequestBody createUserRequest: CreateUserRequest): Mono<Response<UserResponse>> = Mono.fromFuture(

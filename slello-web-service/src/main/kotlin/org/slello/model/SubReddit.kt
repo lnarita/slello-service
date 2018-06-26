@@ -10,6 +10,7 @@ import java.time.ZonedDateTime
 @Document
 data class Community(@Id val id: ObjectId,
                      val name: String,
+                     val thumbnail: String,
                      val description: String,
                      @DBRef(lazy = true)
                      val members: List<User>,

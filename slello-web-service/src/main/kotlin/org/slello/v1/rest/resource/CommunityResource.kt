@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
-import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 
@@ -25,10 +24,11 @@ import reactor.core.publisher.Mono
 class CommunityResource @Autowired constructor(val communityRepository: CommunityRepository, val userRepository: AccountRepository) {
 
     @GetMapping
-    fun fetchAll(): Flux<Response<CommunityResponse>> = communityRepository.findAll()
+    fun fetchAll(): Mono<Response<MutableList<CommunityResponse>>> = communityRepository.findAll()
             .map { community ->
                 toCommunityResponse(community, community.id)
-            }.map {
+            }.collectList()
+            .map {
                 val metadata = ResponseMetaData(HttpStatus.OK.value())
                 Response(metadata, data = it)
             }.defaultIfEmpty(Response(ResponseMetaData(HttpStatus.NO_CONTENT.value()), errors = null, data = null))
@@ -42,12 +42,18 @@ class CommunityResource @Autowired constructor(val communityRepository: Communit
                 Response(metadata, data = it)
             }.defaultIfEmpty(Response(ResponseMetaData(HttpStatus.NOT_FOUND.value()), errors = null, data = null))
 
+    @GetMapping(params = ["path"])
+    fun fetchCommunityByPath(@RequestParam("path", required = true) path: String): Mono<Response<CommunityResponse>> = communityRepository.findByUri(path)
+            .map {
+                toCommunityResponse(it, it.id)
+            }.map {
+                val metadata = ResponseMetaData(HttpStatus.OK.value())
+                Response(metadata, data = it)
+            }.defaultIfEmpty(Response(ResponseMetaData(HttpStatus.NOT_FOUND.value()), errors = null, data = null))
+
     @DeleteMapping("/{id}")
     fun deleteCommunity(@PathVariable("id") id: String): Mono<Response<String>> = communityRepository.deleteById(ObjectId(id))
-            .map {
-                val metadata = ResponseMetaData(HttpStatus.OK.value())
-                Response(metadata, data = "OK")
-            }.defaultIfEmpty(Response(ResponseMetaData(HttpStatus.NOT_FOUND.value()), errors = null, data = null))
+            .then(Mono.just(Response(ResponseMetaData(HttpStatus.OK.value()), data = "OK")))
 
     @PostMapping
     fun createCommunity(principal: Authentication, @RequestBody createCommunityRequest: CreateCommunityRequest): Mono<Response<CommunityResponse>> = Mono.fromFuture(
@@ -55,7 +61,7 @@ class CommunityResource @Autowired constructor(val communityRepository: Communit
                 val userDetails = principal.principal as ApplicationUserDetails
                 val user = User(id = userDetails.username, email = userDetails.email, secret = userDetails.password, authority = userDetails.authority, enabled = userDetails.enabled)
                 with(createCommunityRequest) {
-                    Community(id = ObjectId(), name = name, description = description, uri = path, visibility = visibility, members = listOf(user), readOnly = false)
+                    Community(id = ObjectId(), name = name, description = description, uri = path, visibility = visibility, members = listOf(user), readOnly = false, thumbnail = thumbnail)
                 }
             }).flatMap {
         communityRepository.save(it)
@@ -92,7 +98,7 @@ class CommunityResource @Autowired constructor(val communityRepository: Communit
     private fun toCommunityResponse(it: Community, id: ObjectId): CommunityResponse {
         return with(it) {
             val users = members.map { UserResponse(username = it.id, email = it.email, role = it.authority.name) }
-            CommunityResponse(id = id.toHexString(), name = name, path = uri, visibility = visibility, memberCount = members.size, members = users, readOnly = readOnly)
+            CommunityResponse(id = id.toHexString(), name = name, path = uri, visibility = visibility, memberCount = members.size, members = users, readOnly = readOnly, thumbnail = thumbnail)
         }
     }
 
