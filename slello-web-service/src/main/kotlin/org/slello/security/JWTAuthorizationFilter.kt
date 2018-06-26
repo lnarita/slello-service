@@ -1,7 +1,7 @@
 package org.slello.security
 
 import io.jsonwebtoken.ExpiredJwtException
-import org.slello.log.Loggers
+import org.slello.logger.Loggers
 import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder

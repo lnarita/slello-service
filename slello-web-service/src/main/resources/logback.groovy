@@ -1,7 +1,7 @@
 import ch.qos.logback.classic.AsyncAppender
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder
-import org.slello.log.LogPattern
-import org.slello.log.Loggers
+import org.slello.logger.LogPattern
+import org.slello.logger.Loggers
 
 scan()
 jmxConfigurator()

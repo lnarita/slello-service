@@ -25,6 +25,7 @@ hs_err_pid*
 build/
 out/
 
+!gradle-wrapper.jar
 *.iml
 *.ipr
 *.iws

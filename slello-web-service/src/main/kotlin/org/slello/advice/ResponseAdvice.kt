@@ -2,7 +2,7 @@ package org.slello.advice
 
 import arrow.core.getOrElse
 import arrow.core.toOption
-import org.slello.log.Loggers
+import org.slello.logger.Loggers
 import org.slello.v1.rest.model.response.Response
 import org.springframework.core.MethodParameter
 import org.springframework.http.HttpStatus

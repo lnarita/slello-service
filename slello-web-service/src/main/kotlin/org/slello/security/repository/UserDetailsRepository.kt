@@ -1,6 +1,6 @@
 package org.slello.security.repository
 
-import org.slello.log.Loggers
+import org.slello.logger.Loggers
 import org.slello.repository.AccountRepository
 import org.slello.security.model.ApplicationUserDetails
 import org.springframework.beans.factory.annotation.Autowired
