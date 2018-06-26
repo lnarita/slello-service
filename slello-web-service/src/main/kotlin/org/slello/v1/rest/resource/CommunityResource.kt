@@ -53,10 +53,7 @@ class CommunityResource @Autowired constructor(val communityRepository: Communit
 
     @DeleteMapping("/{id}")
     fun deleteCommunity(@PathVariable("id") id: String): Mono<Response<String>> = communityRepository.deleteById(ObjectId(id))
-            .map {
-                val metadata = ResponseMetaData(HttpStatus.OK.value())
-                Response(metadata, data = "OK")
-            }.defaultIfEmpty(Response(ResponseMetaData(HttpStatus.NOT_FOUND.value()), errors = null, data = null))
+            .then(Mono.just(Response(ResponseMetaData(HttpStatus.OK.value()), data = "OK")))
 
     @PostMapping
     fun createCommunity(principal: Authentication, @RequestBody createCommunityRequest: CreateCommunityRequest): Mono<Response<CommunityResponse>> = Mono.fromFuture(

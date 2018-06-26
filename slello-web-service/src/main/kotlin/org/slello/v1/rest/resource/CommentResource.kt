@@ -50,10 +50,7 @@ class CommentResource @Autowired constructor(val commentRepository: CommentRepos
 
     @DeleteMapping("/{id}")
     fun deleteComment(@PathVariable("id") id: String): Mono<Response<String>>? = commentRepository.deleteById(ObjectId(id))
-            .map {
-                val metadata = ResponseMetaData(HttpStatus.OK.value())
-                Response(metadata, data = "OK")
-            }.defaultIfEmpty(Response(ResponseMetaData(HttpStatus.NOT_FOUND.value()), errors = null, data = null))
+            .then(Mono.just(Response(ResponseMetaData(HttpStatus.OK.value()), data = "OK")))
 
     @PostMapping
     fun createComment(principal: Authentication, @RequestBody createCommentRequest: CreateCommentRequest): Mono<Response<CommentResponse>>? = Mono.fromFuture(
