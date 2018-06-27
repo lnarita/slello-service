@@ -3,8 +3,11 @@ package org.slello.v1.rest.model.response
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.annotation.JsonNaming
+import org.bson.types.ObjectId
 import org.slello.model.Comment
+import org.slello.model.MessageType
 import org.slello.model.Visibility
+import org.springframework.data.annotation.Id
 import org.springframework.http.HttpStatus
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -38,3 +41,5 @@ data class TopicResponse(val id: String, val community: CommunityResponse?, val 
 
 data class TokenResponse(val token: String)
 class LoginResponse(status: HttpStatus, errors: List<ResponseError>?, data: TokenResponse?) : Response<TokenResponse>(ResponseMetaData(status.value()), errors, data)
+
+data class MessageEvent(val id: ObjectId, val destination: String, val user: String, val type: MessageType, val message: String?, val timestamp: Long = ZonedDateTime.now().toInstant().toEpochMilli())
