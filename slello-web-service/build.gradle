@@ -27,7 +27,6 @@ repositories {
     mavenCentral()
     jcenter()
     maven { url "https://repo.spring.io/libs-milestone" }
-    maven { url "https://dl.bintray.com/konrad-kaminski/maven" }
 }
 
 kotlin.experimental {
@@ -41,8 +40,8 @@ dependencyManagement {
 }
 
 dependencies {
-    ["kotlinx-coroutines-core", "kotlinx-coroutines-jdk8"].each {
-        compile "org.jetbrains.kotlinx:${it}:0.22.5"
+    ["kotlinx-coroutines-core", "kotlinx-coroutines-jdk8", "kotlinx-coroutines-reactor"].each {
+        compile "org.jetbrains.kotlinx:${it}:0.23.3"
     }
     runtime "org.codehaus.groovy:groovy:${groovy_version}"
 
@@ -58,7 +57,6 @@ dependencies {
      "spring-boot-starter-actuator"].each {
         compile "org.springframework.boot:${it}"
     }
-    compile "org.springframework.kotlin:spring-kotlin-coroutine:0.3.4"
     compile "org.springframework.data:spring-data-mongodb"
     runtime "org.springframework.boot:spring-boot-devtools"
     testCompile "org.springframework.boot:spring-boot-starter-test"
