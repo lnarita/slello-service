@@ -1,19 +1,14 @@
 package org.slello.v1.rest.resource
 
-import kotlinx.coroutines.experimental.future.future
 import kotlinx.coroutines.experimental.reactor.mono
-import org.bson.types.ObjectId
 import org.slello.model.Channel
-import org.slello.model.Community
 import org.slello.model.User
 import org.slello.repository.AccountRepository
 import org.slello.repository.ChannelRepository
 import org.slello.security.model.ApplicationUserDetails
 import org.slello.v1.rest.model.request.CreateChannelRequest
-import org.slello.v1.rest.model.response.CommunityResponse
 import org.slello.v1.rest.model.response.Response
 import org.slello.v1.rest.model.response.ResponseMetaData
-import org.slello.v1.rest.model.response.UserResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
