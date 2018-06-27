@@ -14,6 +14,7 @@ data class Project(@Id val id: ObjectId,
                    val endDate: LocalDate,
                    val tasks: List<Task>)
 
+@Document
 data class Task(
         @Id val id: ObjectId,
         val sprint: Int,
