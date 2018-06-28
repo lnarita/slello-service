@@ -8,10 +8,10 @@ server.jetty:
 
 spring.data.mongodb:
     database: slello
-    host: localhost
-    port: 27017
+    host: ds163630.mlab.com
+    port: 63630
     username: slello
-    password: ollels
+    password: slello1
 
 jwt:
     secret: ZGx3ak93dVVnYlVkbHVvV1dNdjJDZnpDd0tLQldhZXpCQXZvMVdHQllNTmFkZWQ4RXBoMXVOM051QjNuS3FuamZ1UmhTWDdCdlBMSERtcnNSckl3NHVRRm1seGR1a2wxM0dMbXEyQ3ZldHdnaXRCaEIyQVAyeWhDajhXcjdMQ05jQXdEVlI2STA5VUt0bXBGQ0FOcUpRRjNMVmFSSDJvUk5BZU5LQWxVcktjYUtYR2ozaTlnNEdyTHBaYkZKR296Y1RraFFoSzQ=

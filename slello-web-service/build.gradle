@@ -13,11 +13,15 @@ buildscript {
     }
 }
 
+apply plugin: "kotlin"
 apply plugin: "kotlin-spring"
 
 apply plugin: "org.springframework.boot"
 apply plugin: "io.spring.dependency-management"
 
+apply plugin: 'application'
+
+mainClassName = "org.slello.MainApplicationKt"
 
 jar {
     baseName = "slello-web-service"
