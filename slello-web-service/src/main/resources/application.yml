@@ -32,7 +32,8 @@ http.timeout:
 
 cors:
   allowedOrigins:
-  - "*"
+  - "https://jovit.github.io"
+  - "http://localhost:3000"
   allowedMethods:
   - "*"
   allowedHeaders:
