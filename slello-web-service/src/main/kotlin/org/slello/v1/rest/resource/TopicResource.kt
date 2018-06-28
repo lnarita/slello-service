@@ -27,7 +27,7 @@ class TopicResource @Autowired constructor(val topicRepository: TopicRepository,
     @GetMapping
     fun fetchAll(): Mono<Response<MutableList<TopicResponse>>> = topicRepository.findAll()
             .map { topic ->
-                toTopicResponse(topic, false)
+                toTopicResponse(topic, true)
             }.collectList()
             .map {
                 val metadata = ResponseMetaData(HttpStatus.OK.value())
@@ -68,10 +68,10 @@ class TopicResource @Autowired constructor(val topicRepository: TopicRepository,
                 Response(metadata, data = it)
             }.defaultIfEmpty(Response(ResponseMetaData(HttpStatus.NOT_FOUND.value()), errors = null, data = null))
 
-    @GetMapping(value ="/{id}", params = ["communityId"])
-    fun fetchTopicByCommunity(@PathVariable("id") id: String, @RequestParam("communityId", required = true) communityId: String): Mono<Response<MutableList<TopicResponse>>>? = topicRepository.findByCommunityId(ObjectId(id))
+    @GetMapping(params = ["communityId"])
+    fun fetchTopicByCommunity(@RequestParam("communityId", required = true) communityId: String): Mono<Response<MutableList<TopicResponse>>> = topicRepository.findByCommunityId(ObjectId(communityId))
             .map { topic ->
-                toTopicResponse(topic, false)
+                toTopicResponse(topic, true)
             }.collectList()
             .map {
                 val metadata = ResponseMetaData(HttpStatus.OK.value())
@@ -93,7 +93,7 @@ class TopicResource @Autowired constructor(val topicRepository: TopicRepository,
             }).flatMap {
         topicRepository.save(it)
     }.map {
-        toTopicResponse(it, false)
+        toTopicResponse(it, true)
     }.map {
         val metadata = ResponseMetaData(HttpStatus.OK.value())
         Response(metadata, data = it)
