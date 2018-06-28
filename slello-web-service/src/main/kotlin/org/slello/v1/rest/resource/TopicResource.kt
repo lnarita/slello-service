@@ -1,6 +1,9 @@
 package org.slello.v1.rest.resource
 
+import arrow.core.Option
 import kotlinx.coroutines.experimental.future.future
+import kotlinx.coroutines.experimental.reactive.awaitFirstOrNull
+import kotlinx.coroutines.experimental.runBlocking
 import org.bson.types.ObjectId
 import org.slello.model.Comment
 import org.slello.model.Topic
@@ -25,30 +28,32 @@ import java.time.LocalDateTime
 class TopicResource @Autowired constructor(val topicRepository: TopicRepository, val communityRepository: CommunityRepository, val commentRepository: CommentRepository) {
 
     @GetMapping
-    fun fetchAll(): Mono<Response<MutableList<TopicResponse>>> = topicRepository.findAll()
-            .map { topic ->
-                toTopicResponse(topic, false)
+    fun fetchAll(@RequestParam("fillCommunity", required = false, defaultValue = "false") fillCommunity: Boolean): Mono<Response<MutableList<TopicResponse>>> = topicRepository.findAll()
+            .flatMap { topic ->
+                toTopicResponse(topic, fillCommunity)
             }.collectList()
             .map {
                 val metadata = ResponseMetaData(HttpStatus.OK.value())
                 Response(metadata, data = it)
             }.defaultIfEmpty(Response(ResponseMetaData(HttpStatus.NO_CONTENT.value()), errors = null, data = null))
 
-    private fun toTopicResponse(topic: Topic, buildCommunity: Boolean): TopicResponse {
+    private fun toTopicResponse(topic: Topic, buildCommunity: Boolean): Mono<TopicResponse> {
         return with(topic) {
             val communityResponse = if (buildCommunity) {
                 val community = communityRepository.findById(communityId)
                 community.map {
                     with(it) {
                         val users = members.map { UserResponse(username = it.id, email = it.email, role = it.authority.name) }
-                        CommunityResponse(id = id.toHexString(), name = name, path = uri, visibility = visibility, memberCount = members.size, members = users, readOnly = readOnly, thumbnail = thumbnail, description = description)
+                        Option.just(CommunityResponse(id = id.toHexString(), name = name, path = uri, visibility = visibility, memberCount = members.size, members = users, readOnly = readOnly, thumbnail = thumbnail, description = description))
                     }
-                }.block()
+                }
             } else {
-                null
+                Mono.just(Option.empty())
             }
             val user = UserResponse(username = op.id, email = op.email, role = op.authority.name)
-            TopicResponse(id = id.toHexString(), community = communityResponse, comments = comments.map { toCommentResponse(it) }, headline = headline, postedAt = postedAt, description = description, op = user, votes = votes, readOnly = readOnly)
+            communityResponse.map {
+                TopicResponse(id = id.toHexString(), community = it.orNull(), comments = comments.map { toCommentResponse(it) }, headline = headline, postedAt = postedAt, description = description, op = user, votes = votes, readOnly = readOnly)
+            }
         }
     }
 
@@ -60,18 +65,18 @@ class TopicResource @Autowired constructor(val topicRepository: TopicRepository,
     }
 
     @GetMapping("/{id}")
-    fun fetchTopic(@PathVariable("id") id: String): Mono<Response<TopicResponse>> = topicRepository.findById(ObjectId(id))
-            .map { topic ->
-                toTopicResponse(topic, false)
+    fun fetchTopic(@PathVariable("id") id: String, @RequestParam("fillCommunity", required = false, defaultValue = "false") fillCommunity: Boolean): Mono<Response<TopicResponse>> = topicRepository.findById(ObjectId(id))
+            .flatMap { topic ->
+                toTopicResponse(topic, fillCommunity)
             }.map {
                 val metadata = ResponseMetaData(HttpStatus.OK.value())
                 Response(metadata, data = it)
             }.defaultIfEmpty(Response(ResponseMetaData(HttpStatus.NOT_FOUND.value()), errors = null, data = null))
 
     @GetMapping(params = ["communityId"])
-    fun fetchTopicByCommunity(@RequestParam("communityId", required = true) communityId: String): Mono<Response<MutableList<TopicResponse>>> = topicRepository.findByCommunityId(ObjectId(communityId))
-            .map { topic ->
-                toTopicResponse(topic, false)
+    fun fetchTopicByCommunity(@RequestParam("communityId", required = true) communityId: String, @RequestParam("fillCommunity", required = false, defaultValue = "false") fillCommunity: Boolean): Mono<Response<MutableList<TopicResponse>>> = topicRepository.findByCommunityId(ObjectId(communityId))
+            .flatMap { topic ->
+                toTopicResponse(topic, fillCommunity)
             }.collectList()
             .map {
                 val metadata = ResponseMetaData(HttpStatus.OK.value())
@@ -92,7 +97,7 @@ class TopicResource @Autowired constructor(val topicRepository: TopicRepository,
                 }
             }).flatMap {
         topicRepository.save(it)
-    }.map {
+    }.flatMap {
         toTopicResponse(it, false)
     }.map {
         val metadata = ResponseMetaData(HttpStatus.OK.value())
@@ -116,7 +121,7 @@ class TopicResource @Autowired constructor(val topicRepository: TopicRepository,
         with(it.first) {
             topicRepository.save(copy(comments = comments + listOf(it.second)))
         }
-    }.map {
+    }.flatMap {
         toTopicResponse(it, false)
     }.map {
         val metadata = ResponseMetaData(HttpStatus.OK.value())
