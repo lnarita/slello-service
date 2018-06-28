@@ -17,6 +17,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.InternalAuthenticationServiceException
+import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletRequest
 
 
 @RestController
+@CrossOrigin
 class AuthenticationResource @Autowired constructor(val authenticationController: AuthenticationController) {
     companion object {
         const val BASIC_AUTHORIZATION_PREFIX = "Basic "
