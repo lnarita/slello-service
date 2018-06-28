@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 import org.bson.types.ObjectId
-import org.slello.model.Comment
 import org.slello.model.MessageType
 import org.slello.model.Visibility
-import org.springframework.data.annotation.Id
 import org.springframework.http.HttpStatus
 import java.time.LocalDateTime
 import java.time.ZoneOffset

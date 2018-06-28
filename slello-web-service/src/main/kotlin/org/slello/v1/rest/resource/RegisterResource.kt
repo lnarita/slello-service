@@ -4,7 +4,6 @@ import kotlinx.coroutines.experimental.future.future
 import org.slello.model.Authority
 import org.slello.model.User
 import org.slello.repository.AccountRepository
-import org.slello.v1.rest.model.request.CreateUserRequest
 import org.slello.v1.rest.model.request.RegisterRequest
 import org.slello.v1.rest.model.response.Response
 import org.slello.v1.rest.model.response.ResponseMetaData
@@ -12,13 +11,13 @@ import org.slello.v1.rest.model.response.UserResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.web.bind.annotation.*
-import reactor.core.publisher.Flux
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Mono
 
 
 @RestController
-@CrossOrigin(allowedHeaders = ["*"])
 class RegisterResource @Autowired constructor(val accountRepository: AccountRepository, val passwordEncoder: PasswordEncoder) {
 
     @PostMapping("/register")

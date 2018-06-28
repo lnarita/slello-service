@@ -4,8 +4,6 @@ import org.bson.types.ObjectId
 import org.slello.model.Project
 import org.springframework.data.repository.reactive.ReactiveCrudRepository
 import org.springframework.stereotype.Repository
-import reactor.core.publisher.Mono
 
 @Repository
-interface ProjectRepository : ReactiveCrudRepository<Project, ObjectId> {
-}
+interface ProjectRepository : ReactiveCrudRepository<Project, ObjectId>
