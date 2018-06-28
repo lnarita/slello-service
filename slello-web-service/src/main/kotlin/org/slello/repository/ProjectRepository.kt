@@ -8,5 +8,4 @@ import reactor.core.publisher.Mono
 
 @Repository
 interface ProjectRepository : ReactiveCrudRepository<Project, ObjectId> {
-    fun findByUri(uri: String): Mono<Project>
 }
