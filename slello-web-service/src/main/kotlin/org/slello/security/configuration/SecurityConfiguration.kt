@@ -1,5 +1,6 @@
 package org.slello.security.configuration
 
+import org.slello.configuration.CorsConfigurationProperties
 import org.slello.security.JWT
 import org.slello.security.JWTAuthorizationFilter
 import org.slello.security.UnauthorizedEntryPoint
@@ -20,12 +21,15 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-class SecurityConfiguration @Autowired constructor(val unauthorizedEntryPoint: UnauthorizedEntryPoint, val userDetailsService: AuthUserDetailsService, val jwtTokenUtil: JWT) : WebSecurityConfigurerAdapter() {
+class SecurityConfiguration @Autowired constructor(val unauthorizedEntryPoint: UnauthorizedEntryPoint, val userDetailsService: AuthUserDetailsService, val jwtTokenUtil: JWT, val corsConfiguration: CorsConfigurationProperties) : WebSecurityConfigurerAdapter() {
 
     @Autowired
     @Throws(Exception::class)
@@ -82,5 +86,17 @@ class SecurityConfiguration @Autowired constructor(val unauthorizedEntryPoint: U
                         "/**/*.css",
                         "/**/*.js"
                 )
+    }
+
+    @Bean
+    fun corsConfigurationSource(): CorsConfigurationSource {
+        val configuration = CorsConfiguration()
+        configuration.allowedOrigins = corsConfiguration.allowedOrigins
+        configuration.allowedMethods = corsConfiguration.allowedMethods
+        configuration.allowCredentials = true
+        configuration.allowedHeaders = corsConfiguration.allowedHeaders
+        val source = UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**", configuration)
+        return source
     }
 }

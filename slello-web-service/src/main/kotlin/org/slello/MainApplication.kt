@@ -3,11 +3,11 @@ package org.slello
 import org.springframework.boot.Banner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
-import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker
+import org.springframework.web.servlet.config.annotation.EnableWebMvc
 
 
 @SpringBootApplication
-@EnableCircuitBreaker
+@EnableWebMvc
 class MainApplication
 
 fun main(args: Array<String>) {

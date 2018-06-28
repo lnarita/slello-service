@@ -30,17 +30,10 @@ jar {
 repositories {
     mavenCentral()
     jcenter()
-    maven { url "https://repo.spring.io/libs-milestone" }
 }
 
 kotlin.experimental {
     coroutines "enable"
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:Finchley.RC1"
-    }
 }
 
 dependencies {
@@ -50,10 +43,8 @@ dependencies {
     runtime "org.codehaus.groovy:groovy:${groovy_version}"
 
     // Spring
-    ["spring-cloud-starter", "spring-cloud-starter-netflix-hystrix"].each {
-        compile "org.springframework.cloud:${it}"
-    }
-    ["spring-boot-starter-web",
+    ["spring-boot-starter-aop",
+     "spring-boot-starter-web",
      "spring-boot-starter-jetty",
      "spring-boot-starter-jersey",
      "spring-boot-starter-security",

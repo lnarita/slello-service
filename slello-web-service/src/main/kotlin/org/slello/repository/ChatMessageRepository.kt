@@ -20,7 +20,7 @@ interface ChatMessageRepositoryCustom {
 @Repository
 interface ChatMessageRepository : ReactiveCrudRepository<Message, ObjectId>, ChatMessageRepositoryCustom
 
-class ChatMessageRepositoryImpl(val reactiveMongoTemplate: MongoTemplate) : ChatMessageRepositoryCustom {
+class ChatMessageRepositoryImpl(private val reactiveMongoTemplate: MongoTemplate) : ChatMessageRepositoryCustom {
 
     override fun findByUser(user: String): Flux<Message> = mono {
 

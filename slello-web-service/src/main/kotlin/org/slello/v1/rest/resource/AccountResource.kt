@@ -15,7 +15,6 @@ import reactor.core.publisher.Mono
 
 
 @RestController
-@CrossOrigin(allowedHeaders = ["*"])
 @RequestMapping("/v1/accounts", "/latest/accounts")
 class AccountResource @Autowired constructor(val accountRepository: AccountRepository, val passwordEncoder: PasswordEncoder) {
 

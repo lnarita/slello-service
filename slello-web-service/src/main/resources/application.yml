@@ -1,31 +1,60 @@
+spring.profiles.active: default
+
+---
+
+spring.profiles: default
+
 server:
-    port: 13182
+  port: 13182
 
 server.jetty:
-    acceptors: 4
-    selectors: -1
-    acceptCount: 1000
+  acceptors: 4
+  selectors: -1
+  acceptCount: 1000
 
 spring.data.mongodb:
-    database: slello
-    host: ds163630.mlab.com
-    port: 63630
-    username: slello
-    password: slello1
+  database: slello
+  host: ds163630.mlab.com
+  port: 63630
+  username: slello
+  password: slello1
 
 jwt:
-    secret: ZGx3ak93dVVnYlVkbHVvV1dNdjJDZnpDd0tLQldhZXpCQXZvMVdHQllNTmFkZWQ4RXBoMXVOM051QjNuS3FuamZ1UmhTWDdCdlBMSERtcnNSckl3NHVRRm1seGR1a2wxM0dMbXEyQ3ZldHdnaXRCaEIyQVAyeWhDajhXcjdMQ05jQXdEVlI2STA5VUt0bXBGQ0FOcUpRRjNMVmFSSDJvUk5BZU5LQWxVcktjYUtYR2ozaTlnNEdyTHBaYkZKR296Y1RraFFoSzQ=
-    expiration:
-        duration: 1
-        timeunit: DAYS
+  secret: ZGx3ak93dVVnYlVkbHVvV1dNdjJDZnpDd0tLQldhZXpCQXZvMVdHQllNTmFkZWQ4RXBoMXVOM051QjNuS3FuamZ1UmhTWDdCdlBMSERtcnNSckl3NHVRRm1seGR1a2wxM0dMbXEyQ3ZldHdnaXRCaEIyQVAyeWhDajhXcjdMQ05jQXdEVlI2STA5VUt0bXBGQ0FOcUpRRjNMVmFSSDJvUk5BZU5LQWxVcktjYUtYR2ozaTlnNEdyTHBaYkZKR296Y1RraFFoSzQ=
+  expiration:
+    duration: 1
+    timeunit: DAYS
 
 http.timeout:
-    read: 1500
-    connect: 1500
+  read: 1500
+  connect: 1500
+
+
+cors:
+  allowedOrigins:
+  - "https://jovit.github.io"
+  allowedMethods:
+  - "*"
+  allowedHeaders:
+  - "*"
 
 management.endpoints.web.exposure.include: prometheus, jolokia, metrics, health, httptrace, hystrix.stream
 management.metrics.export.prometheus.enabled: true
 
 management.endpoint.health.show-details: "ALWAYS"
+
+---
+
+spring.profiles: dev
+
+spring.data.mongodb:
+  host: localhost
+  port: 27017
+  password: ollels
+
+
+cors:
+  allowedOrigins:
+  - "*"
 
 logging.level.org.springframework.data.mongodb.core.MongoTemplate: DEBUG
