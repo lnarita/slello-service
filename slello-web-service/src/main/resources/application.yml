@@ -36,7 +36,7 @@ cors:
   allowedMethods:
   - "*"
   allowedHeaders:
-  - "*"
+  - "Authentication"
 
 management.endpoints.web.exposure.include: prometheus, jolokia, metrics, health, httptrace, hystrix.stream
 management.metrics.export.prometheus.enabled: true
@@ -56,5 +56,3 @@ spring.data.mongodb:
 cors:
   allowedOrigins:
   - "*"
-
-logging.level.org.springframework.data.mongodb.core.MongoTemplate: DEBUG

@@ -29,6 +29,9 @@ class ChatMessageResource @Autowired constructor(val messageRepository: ChatMess
         messageRepository.findByUser(it)
     }
 
+    @GetMapping(params = ["channel"])
+    fun fetchByChannel(@RequestParam("channel", required = true) channel: String): Flux<Message> = messageRepository.findByDestination(channel)
+
     @PostMapping
     fun createMessage(principal: Authentication, @RequestBody createCommentRequest: CreateMessageRequest): Mono<Response<Message>> = mono {
         val userDetails = principal.principal as ApplicationUserDetails

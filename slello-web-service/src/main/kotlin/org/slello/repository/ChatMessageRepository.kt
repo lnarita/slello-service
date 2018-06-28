@@ -18,13 +18,15 @@ interface ChatMessageRepositoryCustom {
 }
 
 @Repository
-interface ChatMessageRepository : ReactiveCrudRepository<Message, ObjectId>, ChatMessageRepositoryCustom
+interface ChatMessageRepository : ReactiveCrudRepository<Message, ObjectId>, ChatMessageRepositoryCustom {
+    fun findByDestination(destination: String): Flux<Message>
+}
 
 class ChatMessageRepositoryImpl(private val reactiveMongoTemplate: MongoTemplate) : ChatMessageRepositoryCustom {
 
     override fun findByUser(user: String): Flux<Message> = mono {
 
-        val redactOperation = AggregationOperation { aggregationOperationContext ->
+        val redactOperation = AggregationOperation { _ ->
             val map = mapOf("if" to Document("\$or", listOf(
                     Document("\$eq", listOf("\$user", user)),
                     Document("\$eq", listOf("\$channel_detail.members._id", user)),

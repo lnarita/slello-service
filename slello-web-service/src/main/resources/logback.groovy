@@ -48,6 +48,8 @@ def createAppender(final String appenderName, final String fileName, final Strin
 createAppender("STDOUT", "stdout", LogPattern.DEFAULT.pattern)
 createAppender("STDERR", "stderr", LogPattern.DEFAULT.pattern)
 createAppender("ap_spring", "spring", LogPattern.DEFAULT.pattern)
+createAppender("ap_mongo_template", "mongodb", LogPattern.DEFAULT.pattern)
 logger("org.springframework", INFO, ["ap_spring"], false)
+logger("org.springframework.data.mongodb.core.MongoTemplate", DEBUG, ["ap_mongo_template"], false)
 
 root(INFO, ["STDOUT"])
