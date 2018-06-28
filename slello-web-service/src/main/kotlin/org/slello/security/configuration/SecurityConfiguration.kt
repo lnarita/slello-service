@@ -51,7 +51,7 @@ class SecurityConfiguration @Autowired constructor(val unauthorizedEntryPoint: U
 
     @Throws(Exception::class)
     override fun configure(httpSecurity: HttpSecurity) {
-        httpSecurity
+        httpSecurity.cors().and()
                 // we don't need CSRF
                 .csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedEntryPoint).and()
