@@ -33,7 +33,7 @@ sealed class ResponseError(val code: String, val description: String) {
 open class Response<T>(val meta: ResponseMetaData, val errors: List<ResponseError>? = null, val data: T? = null)
 
 data class UserResponse(val username: String, val email: String, val role: String)
-data class CommunityResponse(val id: String, val name: String, val path: String, val thumbnail: String, val memberCount: Int, val members: List<UserResponse>, val visibility: Visibility, val readOnly: Boolean)
+data class CommunityResponse(val id: String, val name: String, val path: String, val thumbnail: String, val description: String, val memberCount: Int, val members: List<UserResponse>, val visibility: Visibility, val readOnly: Boolean)
 data class CommentResponse(val id: String, val topicId: String, val body: String, val postedAt: LocalDateTime, val user: String, val votes: Int = 0, val children: List<CommentResponse> = listOf())
 data class TopicResponse(val id: String, val community: CommunityResponse?, val headline: String, val postedAt: LocalDateTime, val description: String? = null, val op: UserResponse, val comments: List<CommentResponse> = listOf(), val votes: Int = 0, val readOnly: Boolean = false)
 

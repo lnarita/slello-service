@@ -98,7 +98,7 @@ class CommunityResource @Autowired constructor(val communityRepository: Communit
     private fun toCommunityResponse(it: Community, id: ObjectId): CommunityResponse {
         return with(it) {
             val users = members.map { UserResponse(username = it.id, email = it.email, role = it.authority.name) }
-            CommunityResponse(id = id.toHexString(), name = name, path = uri, visibility = visibility, memberCount = members.size, members = users, readOnly = readOnly, thumbnail = thumbnail)
+            CommunityResponse(id = id.toHexString(), name = name, path = uri, visibility = visibility, memberCount = members.size, members = users, readOnly = readOnly, thumbnail = thumbnail, description = description)
         }
     }
 

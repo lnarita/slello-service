@@ -41,7 +41,7 @@ class TopicResource @Autowired constructor(val topicRepository: TopicRepository,
                 community.map {
                     with(it) {
                         val users = members.map { UserResponse(username = it.id, email = it.email, role = it.authority.name) }
-                        CommunityResponse(id = id.toHexString(), name = name, path = uri, visibility = visibility, memberCount = members.size, members = users, readOnly = readOnly, thumbnail = thumbnail)
+                        CommunityResponse(id = id.toHexString(), name = name, path = uri, visibility = visibility, memberCount = members.size, members = users, readOnly = readOnly, thumbnail = thumbnail, description = description)
                     }
                 }.block()
             } else {
@@ -64,6 +64,16 @@ class TopicResource @Autowired constructor(val topicRepository: TopicRepository,
             .map { topic ->
                 toTopicResponse(topic, false)
             }.map {
+                val metadata = ResponseMetaData(HttpStatus.OK.value())
+                Response(metadata, data = it)
+            }.defaultIfEmpty(Response(ResponseMetaData(HttpStatus.NOT_FOUND.value()), errors = null, data = null))
+
+    @GetMapping(value ="/{id}", params = ["communityId"])
+    fun fetchTopicByCommunity(@PathVariable("id") id: String, @RequestParam("communityId", required = true) communityId: String): Mono<Response<MutableList<TopicResponse>>>? = topicRepository.findByCommunityId(ObjectId(id))
+            .map { topic ->
+                toTopicResponse(topic, false)
+            }.collectList()
+            .map {
                 val metadata = ResponseMetaData(HttpStatus.OK.value())
                 Response(metadata, data = it)
             }.defaultIfEmpty(Response(ResponseMetaData(HttpStatus.NOT_FOUND.value()), errors = null, data = null))

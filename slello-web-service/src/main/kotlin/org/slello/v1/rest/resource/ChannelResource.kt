@@ -53,6 +53,17 @@ class ChannelResource @Autowired constructor(val channelRepository: ChannelRepos
         Response(metadata, data = it)
     }.defaultIfEmpty(Response(ResponseMetaData(HttpStatus.NOT_FOUND.value()), errors = null, data = null))
 
+    @GetMapping("/byUser")
+    fun fetchAllByUser(authentication: Authentication): Mono<Response<MutableList<Channel>>> = channelRepository.findAll()
+            .filter {
+                val userDetails = authentication.principal as ApplicationUserDetails
+                it.members.contains(userDetails)
+            }.collectList()
+            .map {
+                val metadata = ResponseMetaData(HttpStatus.OK.value())
+                Response(metadata, data = it)
+            }.defaultIfEmpty(Response(ResponseMetaData(HttpStatus.NO_CONTENT.value()), errors = null, data = null))
+
     @PostMapping("/{id}:join")
     fun join(authentication: Authentication, @PathVariable("id") id: String): Mono<Response<Channel>> = mono {
         authentication.principal as ApplicationUserDetails
