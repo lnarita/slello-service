@@ -18,6 +18,7 @@ import reactor.core.publisher.Mono
 
 
 @RestController
+@CrossOrigin
 class RegisterResource @Autowired constructor(val accountRepository: AccountRepository, val passwordEncoder: PasswordEncoder) {
 
     @PostMapping("/register")

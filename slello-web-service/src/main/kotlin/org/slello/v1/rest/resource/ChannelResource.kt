@@ -17,6 +17,7 @@ import reactor.core.publisher.Mono
 
 
 @RestController
+@CrossOrigin
 @RequestMapping("/v1/channels", "/latest/channels")
 class ChannelResource @Autowired constructor(val channelRepository: ChannelRepository, val userRepository: AccountRepository) {
 

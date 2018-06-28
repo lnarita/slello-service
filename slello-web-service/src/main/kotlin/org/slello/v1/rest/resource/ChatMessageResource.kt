@@ -18,6 +18,7 @@ import reactor.core.publisher.toFlux
 
 
 @RestController
+@CrossOrigin
 @RequestMapping("/v1/messages", "/latest/messages")
 class ChatMessageResource @Autowired constructor(val messageRepository: ChatMessageRepository) {
 

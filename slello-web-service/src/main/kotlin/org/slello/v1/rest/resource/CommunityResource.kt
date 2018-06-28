@@ -20,6 +20,7 @@ import reactor.core.publisher.Mono
 
 
 @RestController
+@CrossOrigin
 @RequestMapping("/v1/communities", "/latest/communities")
 class CommunityResource @Autowired constructor(val communityRepository: CommunityRepository, val userRepository: AccountRepository) {
 
