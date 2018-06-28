@@ -1,3 +1,5 @@
 ['slello-web-service'].forEach {
     include "${it}"
 }
+
+rootProject.name='slello-service'
