@@ -32,7 +32,7 @@ http.timeout:
 
 cors:
   allowedOrigins:
-  - "https://jovit.github.io"
+  - "*"
   allowedMethods:
   - "*"
   allowedHeaders:
