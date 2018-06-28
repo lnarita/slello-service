@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono
 
 
 @RestController
-@CrossOrigin
+@CrossOrigin(allowedHeaders = ["*"])
 @RequestMapping("/v1/projects", "/latest/projects")
 class ProjectResource @Autowired constructor(val projectRepository: ProjectRepository) {
 

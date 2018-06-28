@@ -19,7 +19,7 @@ import java.time.LocalDateTime
 
 
 @RestController
-@CrossOrigin
+@CrossOrigin(allowedHeaders = ["*"])
 @RequestMapping("/v1/comments", "/latest/comments")
 class CommentResource @Autowired constructor(val commentRepository: CommentRepository) {
 

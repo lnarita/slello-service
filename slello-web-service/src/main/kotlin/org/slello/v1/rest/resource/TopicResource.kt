@@ -21,7 +21,7 @@ import java.time.LocalDateTime
 
 
 @RestController
-@CrossOrigin
+@CrossOrigin(allowedHeaders = ["*"])
 @RequestMapping("/v1/topics", "/latest/topics")
 class TopicResource @Autowired constructor(val topicRepository: TopicRepository, val communityRepository: CommunityRepository, val commentRepository: CommentRepository) {
 
